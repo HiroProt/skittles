@@ -3,7 +3,7 @@ module Skittles
   module Utils
     private 
       def self.handle_foursquare_error(response)
-        info = parse_json(response.body).meta
+        info = parse_json(response).meta
         case info.code.to_i
         when 400
           error = Skittles::BadRequest.new
@@ -32,7 +32,7 @@ module Skittles
       
       # Parses JSON and returns a Hashie::Mash
       def self.parse_json(json)
-        Hashie::Mash.new(Yajl::Parser.new.parse(json))
+        Hashie::Mash.new(Yajl::Parser.new.parse(json.is_a?(String) ? json : json.body))
       end
   end
 end
